@@ -1,0 +1,44 @@
+version: '3.2'
+services:
+        front1:
+                build: .
+                image: simpleapp
+                ports:
+                        - target: 80
+                          published: 1233
+                environment:
+                        - REDIS_HOST=redis
+                        - SERVICE_NOW=svc_now
+                        - SERVICE_TIMEFMT=svc_timefmt
+                depends_on:
+                        - redis
+
+        front2:
+                build: .
+                image: simpleapp
+                ports:
+                        - target: 80
+                          published: 1234
+                environment:
+                        - REDIS_HOST=redis
+                        - SERVICE_NOW=svc_now
+                        - SERVICE_TIMEFMT=svc_timefmt
+                depends_on:
+                        - redis
+
+        svc_now:
+                build: .
+                image: simpleapp
+                command: ['/usr/bin/python3', '/app/simpleapp/svc_now.py']
+                environment:
+                        - REDIS_HOST=redis
+
+        svc_timefmt:
+                build: .
+                image: simpleapp
+                command: ['/usr/bin/python3', '/app/simpleapp/svc_timefmt.py']
+                environment:
+                        - REDIS_HOST=redis
+
+        redis:
+                image: redis
