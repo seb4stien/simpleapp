@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker push eu.gcr.io/gke4gitlab/simpleapp

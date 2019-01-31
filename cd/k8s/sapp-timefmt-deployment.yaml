@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timefmt-deployment
+  label:
+    app: simpleapp
+    tier: timefmt
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simpleapp
+      tier: timefmt
+  template:
+    metadata:
+      labels:
+        app: simpleapp
+        tier: timefmt
+    spec:
+      containers:
+        - name: timefmt
+          image: eu.gcr.io/gke4gitlab/simpleapp:latest
+          command: ['/usr/bin/python3', '/app/simpleapp/svc_timefmt.py']
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /strftime/1/%H
+              port: http
+          readynessProbe:
+            httpGet:
+              path: /strftime/1/%H
+              port: http

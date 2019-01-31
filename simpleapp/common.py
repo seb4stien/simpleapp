@@ -10,8 +10,8 @@ class Worker():
 
 class Backend():
     def __init__(self):
-        host = os.environ.get('REDIS_HOST', 'localhost')
-        port = os.environ.get('REDIS_PORT', 6379)
+        host = os.environ.get('REDIS_SERVICE_HOST', 'localhost')
+        port = os.environ.get('REDIS_SERVICE_PORT', 6379)
         self.__redis = redis.Redis(host=host,
                                    port=port,
                                    decode_responses=True)
