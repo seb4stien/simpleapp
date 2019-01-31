@@ -10,6 +10,8 @@ image:
   repository: eu.gcr.io/gke4gitlab/simpleapp
   tag: latest
   pullPolicy: Always
+  secrets:
+    - name: gitlab-registry
 
 service:
   type: LoadBalancer
