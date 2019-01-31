@@ -1,19 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: now-deployment
+  name: {{ include "simpleapp.fullname" . }}-now
   labels:
-    app: simpleapp
+    app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+    helm.sh/chart: {{ include "simpleapp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.nowCount }}
   selector:
     matchLabels:
-      app: simpleapp
+      app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
       tier: now
   template:
     metadata:
       labels:
-        app: simpleapp
+        app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         tier: now
     spec:
       containers:

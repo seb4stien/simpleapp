@@ -1,25 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: front-deployment
+  name: {{ include "simpleapp.fullname" . }}-front
   labels:
-    app: simpleapp
+    app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+    helm.sh/chart: {{ include "simpleapp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     tier: front
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontCount }}
   selector:
     matchLabels:
-      app: simpleapp
+      app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
       tier: front
   template:
     metadata:
       labels:
-        app: simpleapp
+        app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         tier: front
     spec:
       containers:
         - name: front
-          image: eu.gcr.io/gke4gitlab/simpleapp
+          image: eu.gcr.io/gke4gitlab/simpleapp:latest
           imagePullPolicy: Always
           ports:
             - name: http
