@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: simpleapp
+    tier: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simpleapp
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app: simpleapp
+        tier: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
