@@ -21,11 +21,13 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: now
     spec:
+      imagePullSecrets:
+{{ toYaml .Values.image.secrets | indent 10 }}
       containers:
         - name: now
-          image: eu.gcr.io/gke4gitlab/simpleapp:latest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ['/usr/bin/python3', '/app/simpleapp/svc_now.py']
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
