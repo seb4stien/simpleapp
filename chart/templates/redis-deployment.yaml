@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "simpleapp.name" . }}-redis
+  name: {{ include "simpleapp.fullname" . }}-redis
   labels:
     helm.sh/chart: {{ include "simpleapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
