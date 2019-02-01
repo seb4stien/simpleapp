@@ -41,3 +41,6 @@ spec:
             httpGet:
               path: /strftime/1/%H
               port: http
+          env:
+            - name: REDIS_SERVICE_HOST
+              value: {{ template "simpleapp.fullname" . }}-redis

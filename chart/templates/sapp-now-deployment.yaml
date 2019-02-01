@@ -40,3 +40,6 @@ spec:
             httpGet:
               path: /now
               port: http
+          env:
+            - name: REDIS_SERVICE_HOST
+              value: {{ template "simpleapp.fullname" . }}-redis

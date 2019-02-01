@@ -42,6 +42,6 @@ spec:
               port: http
           env:
             - name: SERVICE_NOW
-              value: $(SIMPLEAPP_NOW_SERVICE_HOST)
+              value: {{ template "simpleapp.fullname" . }}-now
             - name: SERVICE_TIMEFMT
-              value: $(SIMPLEAPP_TIMEFMT_SERVICE_HOST)
+              value:  {{ template "simpleapp.fullname" . }}-timefmt
