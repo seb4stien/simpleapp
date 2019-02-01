@@ -22,8 +22,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: front
     spec:
+      {{- if .Values.image.secrets }}
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+      {{- end }}
       containers:
         - name: front
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

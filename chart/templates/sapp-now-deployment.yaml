@@ -21,8 +21,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: now
     spec:
+      {{- if .Values.image.secrets }}
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+      {{- end }}
       containers:
         - name: now
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
