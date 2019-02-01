@@ -45,3 +45,5 @@ spec:
               value: {{ template "simpleapp.fullname" . }}-now
             - name: SERVICE_TIMEFMT
               value:  {{ template "simpleapp.fullname" . }}-timefmt
+            - name: REDIS_SERVICE_HOST
+              value: {{ template "simpleapp.fullname" . }}-redis
