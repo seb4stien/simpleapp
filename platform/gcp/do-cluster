@@ -1,4 +1,13 @@
 #!/bin/bash
+#
+# GCP helper to create a k8s cluster with helm and istio
+#
+# You need a default zone:
+#   gcloud config set compute/zone europe-west1-b
+
+set -e
+
+which helm > /dev/null 2>&1 || "helm not found in PATH. Get it here: https://storage.googleapis.com/kubernetes-helm/"
 
 while getopts "n:a:" option;
 do
@@ -31,6 +40,7 @@ fi
 
 if [ "$ACTION" == "create" -o "$ACTION" == "reset" ];
 then
+	set -x
 	gcloud container clusters create $NAME
 	gcloud container clusters get-credentials $NAME
 	PWD=$(gcloud container clusters describe $NAME | grep password | awk '{print $2}')
@@ -40,14 +50,18 @@ then
 	kubectl apply -f tiller-sa.yaml
 	kubectl apply -f tiller-rbac.yaml
 	helm init --service-account tiller
+	set +x
 	while kubectl get pods -n kube-system | grep "tiller.*0/1";
 	do
 		echo "  waiting tiller (10s)"
 		sleep 10
 	done
+	set -x
 	helm repo update
 	kubectl label namespace default istio-injection=enabled
 	#cp istio/install/kubernetes/helm/istio/values-istio-demo.yaml istio/install/kubernetes/helm/istio/values.yaml
 	cp -f values-istio.yaml istio/install/kubernetes/helm/istio/values.yaml
 	helm install istio/install/kubernetes/helm/istio --name istio --namespace istio-system
 fi
+
+gcloud container clusters list
