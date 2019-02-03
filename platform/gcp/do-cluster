@@ -1,0 +1,53 @@
+#!/bin/bash
+
+while getopts "n:a:" option;
+do
+	case "${option}" in
+		a)
+			ACTION=${OPTARG}
+			;;
+		n)
+			NAME=${OPTARG}
+			;;
+	esac
+done
+
+
+[ -z "$NAME" -o -z "$ACTION" ] && echo "Missing action or name" && exit 1
+
+
+echo "Perform $ACTION on $NAME"
+
+if [ ! -d "istio-1.0.5" ];
+then
+	wget https://github.com/istio/istio/releases/download/1.0.5/istio-1.0.5-linux.tar.gz
+	tar zxf istio-1.0.5-linux.tar.gz
+fi
+
+if [ "$ACTION" == "delete" -o "$ACTION" == "reset" ];
+then
+	gcloud container clusters delete $NAME
+fi
+
+if [ "$ACTION" == "create" -o "$ACTION" == "reset" ];
+then
+	gcloud container clusters create $NAME
+	gcloud container clusters get-credentials $NAME
+	PWD=$(gcloud container clusters describe $NAME | grep password | awk '{print $2}')
+	CTX=$(kubectl config current-context)
+	kubectl config set-credentials cluster-admin --username=admin --password=$PWD
+	kubectl config set-context $CTX --user=cluster-admin
+	kubectl apply -f tiller-sa.yaml
+	kubectl apply -f tiller-rbac.yaml
+	helm init --service-account tiller
+	while kubectl get pods -n kube-system | grep "tiller.*0/1";
+	do
+		echo "  waiting tiller (10s)"
+		sleep 10
+	done
+	helm repo update
+	kubectl label namespace default istio-injection=enabled
+	#cp istio/install/kubernetes/helm/istio/values-istio-demo.yaml istio/install/kubernetes/helm/istio/values.yaml
+	cp -f values-istio.yaml istio/install/kubernetes/helm/istio/values.yaml
+	helm install istio/install/kubernetes/helm/istio --name istio --namespace istio-system
+fi
