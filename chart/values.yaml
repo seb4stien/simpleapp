@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 
 frontCount: 1
-nowCount: 2
-timefmtCount: 3
+nowCount: 1
+timefmtCount: 1
 
 image:
   repository: eu.gcr.io/gke4gitlab/simpleapp
