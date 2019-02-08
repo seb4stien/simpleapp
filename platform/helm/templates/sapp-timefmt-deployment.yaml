@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "simpleapp.fullname" . }}-timefmt
+  label:
+    app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+    helm.sh/chart: {{ include "simpleapp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    tier: timefmt
+spec:
+  replicas: {{ .Values.timefmtCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      tier: timefmt
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        tier: timefmt
+    spec:
+      {{- if .Values.image.secrets }}
+      imagePullSecrets:
+{{ toYaml .Values.image.secrets | indent 10 }}
+      {{- end }}
+      containers:
+        - name: timefmt
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ['/usr/bin/python3', '/app/simpleapp/svc_timefmt.py']
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /strftime/1/%H
+              port: http
+          readynessProbe:
+            httpGet:
+              path: /strftime/1/%H
+              port: http
+          env:
+            - name: REDIS_SERVICE_HOST
+              value: {{ template "simpleapp.fullname" . }}-redis

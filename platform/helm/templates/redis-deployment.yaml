@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "simpleapp.fullname" . }}-redis
+  labels:
+    helm.sh/chart: {{ include "simpleapp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    tier: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "simpleapp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        tier: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
