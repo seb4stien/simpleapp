@@ -14,15 +14,13 @@ from simpleapp.common import Backend
 app = Flask(__name__)
 backend = Backend()
 
-@app.route('/strftime/<int:time>/<string:fmt>')
+
+@app.route("/strftime/<int:time>/<string:fmt>")
 def strftime(time, fmt):
-    backend.increment('timefmt')
+    backend.increment("timefmt")
     out = datetime.fromtimestamp(time).strftime(fmt)
-    return jsonify({
-        'input': time,
-        'format': fmt,
-        'output': out,
-        })
+    return jsonify({"input": time, "format": fmt, "output": out})
+
 
 if __name__ == "__main__":
     port = 80

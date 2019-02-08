@@ -15,10 +15,12 @@ from simpleapp.common import Backend
 app = Flask(__name__)
 backend = Backend()
 
-@app.route('/now')
+
+@app.route("/now")
 def now():
-    backend.increment('now')
-    return jsonify({'now': int(time.time())})
+    backend.increment("now")
+    return jsonify({"now": int(time.time())})
+
 
 if __name__ == "__main__":
     port = 80
