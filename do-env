@@ -1,0 +1,4 @@
+export PYTHONPATH=.
+export SAPP_SERVICE_NOW_URL=http://127.0.0.1:1235/now
+export SAPP_SERVICE_TIMEFMT_URL=http://127.0.0.1:1236/strftime
+export SAPP_REDIS_URL=redis://127.0.0.1:6379
