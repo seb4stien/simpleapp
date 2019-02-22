@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set +e
-set -x
-
-aws cloudformation delete-stack --stack-name sgeorget-node
-aws eks delete-cluster --name sgeorget
