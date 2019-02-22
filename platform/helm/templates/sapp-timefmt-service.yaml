@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "simpleapp.fullname" . }}-timefmt
+  name: {{ include "simpleapp.fullname" . }}-service-timefmt
   labels:
     app.kubernetes.io/name: {{ include "simpleapp.name" . }}
     helm.sh/chart: {{ include "simpleapp.chart" . }}
