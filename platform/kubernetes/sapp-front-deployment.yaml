@@ -34,7 +34,9 @@ spec:
               path: /stats
               port: http
           env:
-            - name: SERVICE_NOW
-              value: $(SIMPLEAPP_NOW_SERVICE_HOST)
-            - name: SERVICE_TIMEFMT
-              value: $(SIMPLEAPP_TIMEFMT_SERVICE_HOST)
+            - name: REDIS_HOST
+              value: redis
+            - name: MS_NOW_HOST
+              value: ms-now
+            - name: MS_TIMEFMT_HOST
+              value: ms-timefmt

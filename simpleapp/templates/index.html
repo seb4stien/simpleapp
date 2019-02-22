@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Simpleapp</title>
+</head>
+<body>
+<center>
+	<h1>It's now: {{ fmt_val }} (timestamp = {{ now_val}})</h1>
+	<h3>(my name is '{{ name }}')</h3>
+</center>
+{% if error %}
+<center>
+Error: {{ error }}
+</center>
+{% endif %}
+</body>
+</html>

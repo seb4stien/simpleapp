@@ -41,7 +41,7 @@ fi
 if [ "$ACTION" == "create" -o "$ACTION" == "reset" ];
 then
 	set -x
-	gcloud container clusters create $NAME
+	gcloud container clusters create $NAME --num-nodes=4
 	gcloud container clusters get-credentials $NAME
 	PWD=$(gcloud container clusters describe $NAME | grep password | awk '{print $2}')
 	CTX=$(kubectl config current-context)
