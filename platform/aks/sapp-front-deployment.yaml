@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: timefmt-deployment
+  name: front-deployment
   labels:
     app: simpleapp
-    tier: timefmt
+    tier: front
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: simpleapp
-      tier: timefmt
+      tier: front
   template:
     metadata:
       labels:
         app: simpleapp
-        tier: timefmt
+        tier: front
     spec:
       containers:
-        - name: timefmt
-          image: eu.gcr.io/gke4gitlab/simpleapp:latest
-          command: ['/usr/bin/python3', '/app/simpleapp/svc_timefmt.py']
+        - name: front
+          image: 685630748653.dkr.ecr.eu-west-1.amazonaws.com/simpleapp
           imagePullPolicy: Always
           ports:
             - name: http
@@ -28,12 +27,16 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /strftime/1/%H
+              path: /stats
               port: http
           readinessProbe:
             httpGet:
-              path: /strftime/1/%H
+              path: /stats
               port: http
           env:
-            - name: REDIS_HOST
-              value: redis
+            - name: SAPP_REDIS_URL
+              value: redis://redis
+            - name: SAPP_SERVICE_NOW_URL
+              value: http://service-now/now
+            - name: SAPP_SERVICE_TIMEFMT_URL
+              value: http://service-timefmt/strftime

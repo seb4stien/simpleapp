@@ -1,3 +1,4 @@
 #!/bin/bash
 
 docker build -t eu.gcr.io/gke4gitlab/simpleapp .
+docker tag eu.gcr.io/gke4gitlab/simpleapp 685630748653.dkr.ecr.eu-west-1.amazonaws.com/simpleapp

@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: now-deployment
+  name: front-deployment
   labels:
     app: simpleapp
+    tier: front
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: simpleapp
-      tier: now
+      tier: front
   template:
     metadata:
       labels:
         app: simpleapp
-        tier: now
+        tier: front
     spec:
       containers:
-        - name: now
-          image: eu.gcr.io/gke4gitlab/simpleapp:latest
-          command: ['/usr/bin/python3', '/app/simpleapp/svc_now.py']
+        - name: front
+          image: eu.gcr.io/gke4gitlab/simpleapp
           imagePullPolicy: Always
           ports:
             - name: http
@@ -27,12 +27,16 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /now
+              path: /stats
               port: http
           readinessProbe:
             httpGet:
-              path: /now
+              path: /stats
               port: http
           env:
-            - name: REDIS_HOST
-              value: redis
+            - name: SAPP_REDIS_URL
+              value: redis://redis
+            - name: SAPP_SERVICE_NOW_URL
+              value: http://service-now/now
+            - name: SAPP_SERVICE_TIMEFMT_URL
+              value: http://service-timefmt/strftime
