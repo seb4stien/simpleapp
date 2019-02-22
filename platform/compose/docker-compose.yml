@@ -2,43 +2,48 @@ version: '3.2'
 services:
         front1:
                 build: .
-                image: simpleapp
+                image: eu.gcr.io/gke4gitlab/simpleapp
                 ports:
                         - target: 80
                           published: 1233
                 environment:
-                        - REDIS_SERVICE_HOST=redis
-                        - SERVICE_NOW=svc_now
-                        - SERVICE_TIMEFMT=svc_timefmt
+                        - SAPP_REDIS_URL=redis://redis
+                        - SAPP_SERVICE_NOW_URL=http://svc_now/now
+                        - SAPP_SERVICE_TIMEFMT_URL=http://svc_timefmt/strftime
                 depends_on:
                         - redis
 
         front2:
                 build: .
-                image: simpleapp
+                image: eu.gcr.io/gke4gitlab/simpleapp
                 ports:
                         - target: 80
                           published: 1234
                 environment:
-                        - REDIS_SERVICE_HOST=redis
-                        - SERVICE_NOW=svc_now
-                        - SERVICE_TIMEFMT=svc_timefmt
+                        - SAPP_REDIS_URL=redis://redis
+                        - SAPP_SERVICE_NOW_URL=http://svc_now/now
+                        - SAPP_SERVICE_TIMEFMT_URL=http://svc_timefmt/strftime
                 depends_on:
                         - redis
 
         svc_now:
                 build: .
-                image: simpleapp
+                image: eu.gcr.io/gke4gitlab/simpleapp
                 command: ['/usr/bin/python3', '/app/simpleapp/svc_now.py']
                 environment:
-                        - REDIS_SERVICE_HOST=redis
+                        - SAPP_VERSION=v0
+                        - SAPP_REDIS_URL=redis://redis
 
         svc_timefmt:
                 build: .
-                image: simpleapp
+                image: eu.gcr.io/gke4gitlab/simpleapp
                 command: ['/usr/bin/python3', '/app/simpleapp/svc_timefmt.py']
                 environment:
-                        - REDIS_SERVICE_HOST=redis
+                        - SAPP_VERSION=v0
+                        - SAPP_REDIS_URL=redis://redis
 
         redis:
-                image: redis
+                image: service-redis-registry.af.multis.p.fti.net/infrastructure-services/service-redis-image-redis-single-node:2.5.1
+                environment:
+                        - REDIS_INSTANCE_NAME=redis
+                        - REDIS_INSTANCE_MAXMEMORY_IN_MB=50
