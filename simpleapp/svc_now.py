@@ -2,6 +2,7 @@
 Trivial frontend
 """
 # stdlib
+import os
 import sys
 import time
 
@@ -11,6 +12,8 @@ from flask import Flask, jsonify
 # local
 from simpleapp.common import Backend
 
+VERSION = os.environ.get("SAPP_VERSION", "unknown")
+
 
 app = Flask(__name__)
 backend = Backend()
@@ -19,7 +22,7 @@ backend = Backend()
 @app.route("/now")
 def now():
     backend.increment("now")
-    return jsonify({"now": int(time.time())})
+    return jsonify({"value": int(time.time()), "version": VERSION})
 
 
 if __name__ == "__main__":

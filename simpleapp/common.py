@@ -1,7 +1,14 @@
+"""
+Common classes
+"""
+
+# stdlib
 import os
-import redis
 import time
 import uuid
+
+# requirements
+import redis
 
 
 class Worker:
@@ -11,9 +18,12 @@ class Worker:
 
 class Backend:
     def __init__(self):
-        host = os.environ.get("REDIS_SERVICE_HOST", "localhost")
-        port = os.environ.get("REDIS_SERVICE_PORT", 6379)
-        self.__redis = redis.Redis(host=host, port=port, decode_responses=True)
+        url = os.environ.get("SAPP_REDIS_URL")
+
+        if not url:
+            raise RuntimeError("You must define SAPP_REDIS_URL")
+
+        self.__redis = redis.Redis.from_url(url, decode_responses=True)
 
     def register(self, name):
         now = int(time.time())

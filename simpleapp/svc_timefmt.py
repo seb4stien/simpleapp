@@ -3,6 +3,7 @@ Trivial frontend
 """
 # stdlib
 from datetime import datetime
+import os
 import sys
 
 # dependencies
@@ -10,6 +11,8 @@ from flask import Flask, jsonify
 
 # local
 from simpleapp.common import Backend
+
+VERSION = os.environ.get("SAPP_VERSION", "unknown")
 
 app = Flask(__name__)
 backend = Backend()
@@ -19,7 +22,7 @@ backend = Backend()
 def strftime(time, fmt):
     backend.increment("timefmt")
     out = datetime.fromtimestamp(time).strftime(fmt)
-    return jsonify({"input": time, "format": fmt, "output": out})
+    return jsonify({"input": time, "format": fmt, "value": out, "version": VERSION})
 
 
 if __name__ == "__main__":
