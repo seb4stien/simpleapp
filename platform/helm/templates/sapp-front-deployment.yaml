@@ -46,6 +46,6 @@ spec:
             - name: SAPP_SERVICE_NOW_URL
               value: http://{{ template "simpleapp.fullname" . }}-service-now/now
             - name: SAPP_SERVICE_TIMEFMT_URL
-              value: http://{{ template "simpleapp.fullname" . }}-service-timefmt/now
+              value: http://{{ template "simpleapp.fullname" . }}-service-timefmt/strftime
             - name: SAPP_REDIS_URL
               value: redis://{{ template "simpleapp.fullname" . }}-redis
