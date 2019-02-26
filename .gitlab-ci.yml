@@ -33,6 +33,10 @@ stop_gcp:
     name: staging-$CI_COMMIT_REF_NAME
     action: stop
   script:
+    - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
+    - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
+    - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
+    - kubectl config use-context dev-gcp
     - kubectl delete -f release.yaml
   when: manual
 
