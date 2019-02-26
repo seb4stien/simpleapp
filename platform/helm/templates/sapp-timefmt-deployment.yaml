@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "simpleapp.fullname" . }}-timefmt
-  label:
+  labels:
     app.kubernetes.io/name: {{ include "simpleapp.name" . }}
     helm.sh/chart: {{ include "simpleapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
