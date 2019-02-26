@@ -39,7 +39,7 @@ spec:
             httpGet:
               path: /strftime/1/%H
               port: http
-          readynessProbe:
+          readinessProbe:
             httpGet:
               path: /strftime/1/%H
               port: http
