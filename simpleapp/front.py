@@ -53,6 +53,7 @@ def call_service(svc_name, query=""):
 
 
 @APP.route("/")
+@APP.route("/index")
 def index():
     """ Index page """
 
