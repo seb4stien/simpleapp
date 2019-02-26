@@ -21,7 +21,7 @@ deploy_gcp:
     - kubectl apply -f release.yaml
   environment:
     name: staging-$CI_COMMIT_REF_NAME
-    on_stop: stop_staging
+    on_stop: stop_gcp
   artifacts:
     paths:
       - release.yaml
@@ -34,8 +34,7 @@ stop_gcp:
     action: stop
   script:
     - kubectl delete -f release.yaml
-  when:
-    - manual
+  when: manual
 
 test_gcp:
   image: registry.gitlab.si.francetelecom.fr/build-images/kubernetes
