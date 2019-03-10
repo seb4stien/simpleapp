@@ -10,6 +10,7 @@ deploy_aws:
     - echo todo
 
 before_script:
+  - test -z "$GCP_CLUSTER_IP" -o -z "$GCP_CLUSTER_PASSWORD" && echo "You must define GCP_CLUSTER_IP and GCP_CLUSTER_PASSWORD" && exit 1
   - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
   - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
   - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
