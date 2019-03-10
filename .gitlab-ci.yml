@@ -9,14 +9,16 @@ deploy_aws:
   script:
     - echo todo
 
+before_script:
+  - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
+  - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
+  - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
+  - kubectl config use-context dev-gcp
+
 deploy_gcp:
   image: registry.gitlab.si.francetelecom.fr/build-images/kubernetes
   stage: deploy
   script:
-    - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
-    - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
-    - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
-    - kubectl config use-context dev-gcp
     - helm template platform/helm/ --name $CI_COMMIT_REF_NAME > release.yaml
     - kubectl apply -f release.yaml
   environment:
@@ -33,20 +35,12 @@ stop_gcp:
     name: staging-$CI_COMMIT_REF_NAME
     action: stop
   script:
-    - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
-    - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
-    - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
-    - kubectl config use-context dev-gcp
     - kubectl delete -f release.yaml
   when: manual
 
 test_gcp:
   image: registry.gitlab.si.francetelecom.fr/build-images/kubernetes
   script:
-    - kubectl config set-cluster dojo-gcp --server https://$GCP_CLUSTER_IP --insecure-skip-tls-verify
-    - kubectl config set-credentials admin --username admin --password $GCP_CLUSTER_PASSWORD
-    - kubectl config set-context dev-gcp --cluster dojo-gcp --user admin
-    - kubectl config use-context dev-gcp
     - SVC_IP=$(kubectl get svc/${CI_COMMIT_REF_NAME}-simpleapp-front | tail -n 1 | awk '{print $4}')
     - echo "Waiting 120s before testing (time for LB to show up)"
     - sleep 120
