@@ -23,7 +23,7 @@ deploy_gcp:
     - helm template platform/helm/ --name $CI_COMMIT_REF_NAME > release.yaml
     - kubectl apply -f release.yaml
   environment:
-    name: staging-$CI_COMMIT_REF_NAME
+    name: staging-gcp-$CI_COMMIT_REF_NAME
     on_stop: stop_gcp
   artifacts:
     paths:
@@ -33,7 +33,7 @@ stop_gcp:
   stage: clean
   image: registry.gitlab.si.francetelecom.fr/build-images/kubernetes
   environment:
-    name: staging-$CI_COMMIT_REF_NAME
+    name: staging-gcp-$CI_COMMIT_REF_NAME
     action: stop
   script:
     - kubectl delete -f release.yaml
