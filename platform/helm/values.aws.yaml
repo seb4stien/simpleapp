@@ -10,8 +10,6 @@ image:
   repository: 685630748653.dkr.ecr.eu-west-1.amazonaws.com/simpleapp
   tag: latest
   pullPolicy: Always
-  secrets:
-    - name: gitlab-registry
 
 service:
   type: LoadBalancer
